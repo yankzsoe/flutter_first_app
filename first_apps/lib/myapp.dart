@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class MyApp extends StatefulWidget {
   @override
@@ -9,9 +8,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  String email = '';
-  final emailController = TextEditingController();
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final _contentController = TextEditingController();
+  final _amountController = TextEditingController();
+  String _content;
+  double _amount;
   @override
   void initState() {
     super.initState();
@@ -26,28 +27,46 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    DateTime dt = new DateTime.now();
-    DateTime odt = new DateTime(2020, 11, 17);
     return MaterialApp(
-      title: "latihan 1",
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: Scaffold(
-          body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              // DateFormat('yyyy-MM-dd').format(dt),
-              // DateFormat.yMMMMd().format(odt),
-              NumberFormat('#,###.0##', 'en-US').format(1234.567),
-              style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blueAccent),
-            )
-          ],
-        ),
-      )),
-    );
+        title: "latihan 1",
+        theme: ThemeData(primarySwatch: Colors.blue),
+        home: Scaffold(
+            key: _scaffoldKey,
+            body: SafeArea(
+                minimum: EdgeInsets.only(left: 20, right: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    TextField(
+                      controller: _contentController,
+                      decoration: InputDecoration(labelText: 'Content'),
+                      onChanged: (text) {
+                        setState(() {
+                          _content = text;
+                        });
+                      },
+                    ),
+                    TextField(
+                      controller: _amountController,
+                      decoration: InputDecoration(labelText: 'Amount(money)'),
+                      onChanged: (text) {
+                        setState(() {
+                          _amount = double.tryParse(text) ?? 0;
+                        });
+                      },
+                    ),
+                    FlatButton(
+                        textColor: Colors.amber[300],
+                        color: Colors.blue,
+                        child: Text('Insert Transaction'),
+                        onPressed: () {
+                          _scaffoldKey.currentState.showSnackBar(SnackBar(
+                            content: Text(
+                                'Content = $_content and Amount = $_amount'),
+                            duration: Duration(seconds: 1),
+                          ));
+                        })
+                  ],
+                ))));
   }
 }
