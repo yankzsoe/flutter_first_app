@@ -1,3 +1,4 @@
+import 'package:first_apps/transaction.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatefulWidget {
@@ -11,8 +12,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _contentController = TextEditingController();
   final _amountController = TextEditingController();
-  String _content;
-  double _amount;
+  Transaction transaction = Transaction(content: '', amount: 0.0);
+  List<Transaction> _transactions = List<Transaction>();
   @override
   void initState() {
     super.initState();
@@ -42,7 +43,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                       decoration: InputDecoration(labelText: 'Content'),
                       onChanged: (text) {
                         setState(() {
-                          _content = text;
+                          transaction.content = text;
                         });
                       },
                     ),
@@ -51,21 +52,46 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                       decoration: InputDecoration(labelText: 'Amount(money)'),
                       onChanged: (text) {
                         setState(() {
-                          _amount = double.tryParse(text) ?? 0;
+                          transaction.amount = double.tryParse(text) ?? 0;
                         });
                       },
                     ),
-                    FlatButton(
-                        textColor: Colors.amber[300],
-                        color: Colors.blue,
-                        child: Text('Insert Transaction'),
-                        onPressed: () {
-                          _scaffoldKey.currentState.showSnackBar(SnackBar(
-                            content: Text(
-                                'Content = $_content and Amount = $_amount'),
-                            duration: Duration(seconds: 1),
-                          ));
-                        })
+                    Padding(padding: const EdgeInsets.symmetric(vertical: 10)),
+                    ButtonTheme(
+                      height: 50,
+                      child: FlatButton(
+                          textColor: Colors.amber[300],
+                          color: Colors.blue,
+                          child: Text(
+                            'Insert Transaction',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _transactions.add(transaction);
+                              transaction =
+                                  Transaction(content: '', amount: 0.0);
+                              _contentController.text = '';
+                              _amountController.text = '';
+                            });
+                            _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Text(_transactions.toString()),
+                              duration: Duration(seconds: 1),
+                            ));
+                          }),
+                    ),
+                    Column(
+                      children: _transactions.map((e) {
+                        return ListTile(
+                          leading: const Icon(Icons.access_alarms),
+                          title: Text('${e.content}'),
+                          subtitle: Text('${e.amount}'),
+                          onTap: () {
+                            print('clicked me');
+                          },
+                        );
+                      }).toList(),
+                    )
                   ],
                 ))));
   }
