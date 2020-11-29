@@ -32,6 +32,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         transaction.amount.isNaN ||
         transaction.amount == 0.0) return;
 
+    transaction.createdDate = DateTime.now();
     _transactions.add(transaction);
     transaction = Transaction(content: '', amount: 0.0);
     _contentController.text = '';
