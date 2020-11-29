@@ -1,3 +1,4 @@
+import 'package:first_apps/TransactionList.dart';
 import 'package:first_apps/transaction.dart';
 import 'package:flutter/material.dart';
 
@@ -35,64 +36,56 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             key: _scaffoldKey,
             body: SafeArea(
                 minimum: EdgeInsets.only(left: 20, right: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    TextField(
-                      controller: _contentController,
-                      decoration: InputDecoration(labelText: 'Content'),
-                      onChanged: (text) {
-                        setState(() {
-                          transaction.content = text;
-                        });
-                      },
-                    ),
-                    TextField(
-                      controller: _amountController,
-                      decoration: InputDecoration(labelText: 'Amount(money)'),
-                      onChanged: (text) {
-                        setState(() {
-                          transaction.amount = double.tryParse(text) ?? 0;
-                        });
-                      },
-                    ),
-                    Padding(padding: const EdgeInsets.symmetric(vertical: 10)),
-                    ButtonTheme(
-                      height: 50,
-                      child: FlatButton(
-                          textColor: Colors.amber[300],
-                          color: Colors.blue,
-                          child: Text(
-                            'Insert Transaction',
-                            style: TextStyle(fontSize: 18),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _transactions.add(transaction);
-                              transaction =
-                                  Transaction(content: '', amount: 0.0);
-                              _contentController.text = '';
-                              _amountController.text = '';
-                            });
-                            _scaffoldKey.currentState.showSnackBar(SnackBar(
-                              content: Text(_transactions.toString()),
-                              duration: Duration(seconds: 1),
-                            ));
-                          }),
-                    ),
-                    Column(
-                      children: _transactions.map((e) {
-                        return ListTile(
-                          leading: const Icon(Icons.access_alarms),
-                          title: Text('${e.content}'),
-                          subtitle: Text('${e.amount}'),
-                          onTap: () {
-                            print('clicked me');
-                          },
-                        );
-                      }).toList(),
-                    )
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      TextField(
+                        controller: _contentController,
+                        decoration: InputDecoration(labelText: 'Content'),
+                        onChanged: (text) {
+                          setState(() {
+                            transaction.content = text;
+                          });
+                        },
+                      ),
+                      TextField(
+                        controller: _amountController,
+                        decoration: InputDecoration(labelText: 'Amount(money)'),
+                        onChanged: (text) {
+                          setState(() {
+                            transaction.amount = double.tryParse(text) ?? 0;
+                          });
+                        },
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10)),
+                      ButtonTheme(
+                        height: 50,
+                        child: FlatButton(
+                            textColor: Colors.amber[300],
+                            color: Colors.blue,
+                            child: Text(
+                              'Insert Transaction',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _transactions.add(transaction);
+                                transaction =
+                                    Transaction(content: '', amount: 0.0);
+                                _contentController.text = '';
+                                _amountController.text = '';
+                              });
+                              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                                content: Text(_transactions.toString()),
+                                duration: Duration(seconds: 1),
+                              ));
+                            }),
+                      ),
+                      TransactionList(transactions: _transactions)
+                    ],
+                  ),
                 ))));
   }
 }
