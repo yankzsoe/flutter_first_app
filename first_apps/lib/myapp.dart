@@ -27,12 +27,44 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
   }
 
+  void _insertTransaction() {
+    if (transaction.content.isEmpty ||
+        transaction.amount.isNaN ||
+        transaction.amount == 0.0) return;
+
+    _transactions.add(transaction);
+    transaction = Transaction(content: '', amount: 0.0);
+    _contentController.text = '';
+    _amountController.text = '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         title: "latihan 1",
         theme: ThemeData(primarySwatch: Colors.blue),
         home: Scaffold(
+            appBar: AppBar(
+              title: const Text('Transaction Manager'),
+              actions: <Widget>[
+                IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () {
+                      setState(() {
+                        this._insertTransaction();
+                      });
+                    })
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              tooltip: 'Add transaction',
+              child: Icon(Icons.add),
+              onPressed: () {
+                setState(() {
+                  this._insertTransaction();
+                });
+              },
+            ),
             key: _scaffoldKey,
             body: SafeArea(
                 minimum: EdgeInsets.only(left: 20, right: 20),
@@ -71,11 +103,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                             ),
                             onPressed: () {
                               setState(() {
-                                _transactions.add(transaction);
-                                transaction =
-                                    Transaction(content: '', amount: 0.0);
-                                _contentController.text = '';
-                                _amountController.text = '';
+                                this._insertTransaction();
                               });
                               _scaffoldKey.currentState.showSnackBar(SnackBar(
                                 content: Text(_transactions.toString()),
