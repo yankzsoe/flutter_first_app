@@ -133,6 +133,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           onPressed: () {
             _onButtonShowModalSheet();
           },
+          backgroundColor: Theme.of(context).primaryColor,
         ),
         key: _scaffoldKey,
         body: SafeArea(
@@ -145,11 +146,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                   ButtonTheme(
                     height: 50,
                     child: FlatButton(
-                        textColor: Colors.amber[300],
-                        color: Colors.blue,
+                        textColor: Colors.white,
+                        color: Theme.of(context).primaryColor,
                         child: Text(
                           'Insert Transaction',
-                          style: TextStyle(fontSize: 18),
+                          style:
+                              TextStyle(fontSize: 18, fontFamily: 'Pacifico'),
                         ),
                         onPressed: () {
                           _onButtonShowModalSheet();
